@@ -8,16 +8,11 @@
 
     const startingState = vscode.getState();
 
-    // setInterval(() => {
-    //     const startingState = vscode.getState();
-    //     console.log(startingState ? JSON.stringify(startingState) : undefined);
-    // }, 1000);
-    
     if (startingState) {
-        if (typeof startingState.body === 'string') {
-            updateContent();
+        if (startingState.body) {
+            updateContent(startingState.body);
         } else if (startingState.noContent) {
-            setNoContent();
+            setNoContent(startingState.noContent);
         }
     }
 
@@ -44,13 +39,19 @@
         }
     });
 
+    /**
+     * @param {string} contents
+     */
     function updateContent(contents) {
         main.innerHTML = contents;
         vscode.setState({ body: contents });
     }
 
+    /**
+     * @param {string} message
+     */
     function setNoContent(message) {
         main.innerHTML = `<p class="no-content">${message}</p>`;
-        vscode.setState({ body: undefined, noContent: true });
+        vscode.setState({ noContent: message });
     }
 }());
