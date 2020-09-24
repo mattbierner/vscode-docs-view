@@ -1,0 +1,77 @@
+{
+	"name": "docs-view",
+	"displayName": "Docs View",
+	"description": "Display hover documentation in the sidebar or panel.",
+	"version": "0.0.1",
+	"publisher": "bierner",
+	"keywords": [
+		"documentation",
+		"docs",
+		"hover",
+		"sidebar",
+		"panel"
+	],
+	"enableProposedApi": true,
+	"engines": {
+		"vscode": "^1.50.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onView:docsView.documentation"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/microsoft/vscode-extension-samples.git"
+	},
+	"main": "./out/extension.js",
+	"contributes": {
+		"views": {
+			"explorer": [
+				{
+					"type": "webview",
+					"id": "docsView.documentation",
+					"name": "Documentation"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Docs View",
+			"properties": {
+				"documentationView.updateMode": {
+					"type": "string",
+					"description": "Controls how the documentation view is updated when the cursor moves",
+					"enum": [
+						"live",
+						"sticky"
+					],
+					"enumDescriptions": [
+						"The documentation view tracks the current cursor position. Display empty content if no documentation is found at the current position.",
+						"The documentation view tries to show the documentation at the current cursor position. If there is none, it continues showing the last available documentation."
+					]
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint . --ext .ts,.tsx",
+		"watch": "tsc -w -p ./"
+	},
+	"dependencies": {
+		"marked": "^1.1.1",
+		"oniguruma": "^7.2.1",
+		"shiki": "^0.2.5",
+		"shiki-themes": "^0.2.5"
+	},
+	"devDependencies": {
+		"@types/marked": "^1.1.0",
+		"@types/vscode": "^1.47.0",
+		"@typescript-eslint/eslint-plugin": "^3.0.2",
+		"@typescript-eslint/parser": "^3.0.2",
+		"eslint": "^7.1.0",
+		"typescript": "^4.0.2"
+	}
+}

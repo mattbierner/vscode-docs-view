@@ -1,0 +1,45 @@
+body {
+	word-wrap: break-word;
+	margin: 1em 0;
+	padding: 0;
+
+	font-size: 12px;
+	line-height: 17px;
+}
+
+pre code {
+	word-wrap: break-word;
+	white-space: pre-wrap;
+	word-break: break-all;
+	background: none;
+}
+
+#main > * {
+	padding: 0 20px;
+}
+
+.no-content {
+	font-style: italic;
+}
+
+#main > hr {
+	display: block;
+	border: none;
+	border-color: var(--vscode-sideBarSectionHeader-border);
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	padding: 0;
+	opacity: 0.5;
+}
+
+code {
+	color: inherit;
+	background: var(--vscode-textCodeBlock-background);
+	font-family: var(--vscode-editor-font-family);
+}
+
+ul,
+ol {
+	padding-left: 20px;
+	margin: 8px;
+}
