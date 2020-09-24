@@ -2,10 +2,27 @@ import marked = require('marked');
 import * as vscode from 'vscode';
 import { CodeHighlighter } from './codeHighlighter';
 
-
 export class Renderer {
 
-	private readonly _highlighter = new CodeHighlighter();
+	private readonly _disposables: vscode.Disposable[] = [];
+
+	private readonly _highlighter: CodeHighlighter;
+
+	public readonly needsRender: vscode.Event<void>;
+
+	constructor() {
+		this._highlighter = new CodeHighlighter();
+		this._disposables.push(this._highlighter);
+
+		this.needsRender = this._highlighter.needsRender;
+	}
+
+	dispose() {
+		let item: vscode.Disposable | undefined;
+		while ((item = this._disposables.pop())) {
+			item.dispose();
+		}
+	}
 
 	public async render(hovers: readonly vscode.Hover[]): Promise<string> {
 		const parts = (hovers)
@@ -21,6 +38,7 @@ export class Renderer {
 		const highlighter = await this._highlighter.getHighlighter();
 		return marked(markdown, { highlight: highlighter });
 	}
+
 
 	private getMarkdown(content: vscode.MarkedString): string {
 		if (typeof content === 'string') {

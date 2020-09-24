@@ -10,6 +10,8 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 	public static readonly viewType = 'docsView.documentation';
 
+	private static readonly pinnedContext = 'docsView.documentationView.isPinned';
+
 	private readonly _disposables: vscode.Disposable[] = [];
 
 	private readonly _renderer = new Renderer();
@@ -19,6 +21,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 	private _loading?: { cts: vscode.CancellationTokenSource }
 
 	private _updateMode = UpdateMode.Live;
+	private _pinned = false;
 
 	constructor(
 		private readonly _extensionUri: vscode.Uri,
@@ -30,6 +33,10 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		vscode.window.onDidChangeTextEditorSelection(() => {
 			this.update();
 		}, null, this._disposables);
+
+		this._renderer.needsRender(() => {
+			this.update(/* force */ true);
+		}, undefined, this._disposables);
 
 		vscode.workspace.onDidChangeConfiguration(() => {
 			this.updateConfiguration();
@@ -70,9 +77,36 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 			this._view = undefined;
 		});
 
+		this.updateTitle();
 		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
 		this.update();
+	}
+
+	public pin() {
+		this.updatePinned(true);
+	}
+
+	public unpin() {
+		this.updatePinned(false);
+	}
+
+	private updatePinned(value: boolean) {
+		if (this._pinned === value) {
+			return;
+		}
+
+		this._pinned = value;
+		vscode.commands.executeCommand('setContext', DocsViewViewProvider.pinnedContext, value);
+
+		this.update();
+	}
+
+	private updateTitle() {
+		if (!this._view) {
+			return;
+		}
+		this._view.description = this._pinned ? "(pinned)" : undefined;
 	}
 
 	private _getHtmlForWebview(webview: vscode.Webview) {
@@ -107,13 +141,19 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 			</html>`;
 	}
 
-	private async update() {
+	private async update(ignoreCache = false) {
 		if (!this._view) {
 			return;
 		}
 
+		this.updateTitle();
+
+		if (this._pinned) {
+			return;
+		}
+
 		const newCacheKey = createCacheKey(vscode.window.activeTextEditor);
-		if (cacheKeyEquals(this._currentCacheKey, newCacheKey)) {
+		if (!ignoreCache && cacheKeyEquals(this._currentCacheKey, newCacheKey)) {
 			return;
 		}
 
@@ -127,11 +167,8 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		const loadingEntry = { cts: new vscode.CancellationTokenSource() };
 		this._loading = loadingEntry;
 
-		return vscode.window.withProgress({ location: { viewId: DocsViewViewProvider.viewType } }, async () => {
-			if (!this._view) {
-				return;
-			}
 
+		const updatePromise = (async () => {
 			const html = await this.getHtmlContentForActiveEditor(loadingEntry.cts.token);
 			if (loadingEntry.cts.token.isCancellationRequested) {
 				return;
@@ -155,7 +192,19 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 					updateMode: this._updateMode,
 				});
 			}
-		});
+		})();
+
+		await Promise.race([
+			updatePromise,
+
+			// Don't show progress indicator right away, which causes a flash
+			new Promise<void>(resolve => setTimeout(resolve, 250)).then(() => {
+				if (loadingEntry.cts.token.isCancellationRequested) {
+					return;
+				}
+				return vscode.window.withProgress({ location: { viewId: DocsViewViewProvider.viewType } }, () => updatePromise);
+			}),
+		]);
 	}
 
 	private async getHtmlContentForActiveEditor(token: vscode.CancellationToken): Promise<string> {

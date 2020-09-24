@@ -28,14 +28,22 @@ export class CodeHighlighter {
 	private _highlighter?: Promise<Highlighter>;
 
 	constructor() {
+		this._needsRender = new vscode.EventEmitter<void>();
+		this._disposables.push(this._needsRender);
+		this.needsRender = this._needsRender.event;
+
 		vscode.workspace.onDidChangeConfiguration(e => {
 			if (e.affectsConfiguration('workbench.colorTheme')) {
 				this.update();
+				this._needsRender.fire();
 			}
 		}, null, this._disposables);
 
 		this.update();
 	}
+
+	private readonly _needsRender: vscode.EventEmitter<void>;
+	public readonly needsRender: vscode.Event<void>;
 
 	dispose() {
 		let item: vscode.Disposable | undefined;
