@@ -1,7 +1,7 @@
 {
 	"name": "docs-view",
 	"displayName": "Docs View",
-	"description": "Display hover documentation in the sidebar or panel.",
+	"description": "Display documentation in the sidebar or panel.",
 	"version": "0.0.1",
 	"publisher": "bierner",
 	"keywords": [
@@ -16,6 +16,7 @@
 		"color": "4C4C4C",
 		"theme": "light"
 	},
+	"icon": "./icon.png",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
