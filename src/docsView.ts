@@ -63,13 +63,13 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		webviewView.webview.options = {
 			enableScripts: true,
 			localResourceRoots: [
-				this._extensionUri
+				vscode.Uri.joinPath(this._extensionUri, 'media')
 			]
 		};
 
 		webviewView.onDidChangeVisibility(() => {
 			if (this._view?.visible) {
-				this.update();
+				this.update(/* force */ true);
 			}
 		});
 
@@ -80,7 +80,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		this.updateTitle();
 		webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
 
-		this.update();
+		this.update(/* force */ true);
 	}
 
 	public pin() {
@@ -115,7 +115,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 		const nonce = getNonce();
 
-		return `<!DOCTYPE html>
+		return /* html */`<!DOCTYPE html>
 			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
@@ -167,7 +167,6 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		const loadingEntry = { cts: new vscode.CancellationTokenSource() };
 		this._loading = loadingEntry;
 
-
 		const updatePromise = (async () => {
 			const html = await this.getHtmlContentForActiveEditor(loadingEntry.cts.token);
 			if (loadingEntry.cts.token.isCancellationRequested) {
@@ -178,8 +177,9 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 				// A new entry has started loading since we started
 				return;
 			}
+			this._loading = undefined;
 
-			if (html?.length) {
+			if (html.length) {
 				this._view?.webview.postMessage({
 					type: 'update',
 					body: html,
@@ -230,7 +230,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 	private updateConfiguration() {
 		const config = vscode.workspace.getConfiguration('docsView');
-		this._updateMode = config.get<UpdateMode>('documentationView.updateMode') ?? UpdateMode.Live;
+		this._updateMode = config.get<UpdateMode>('documentationView.updateMode') || UpdateMode.Live;
 	}
 }
 

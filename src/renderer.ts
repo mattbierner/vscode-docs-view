@@ -1,4 +1,4 @@
-import marked = require('marked');
+import * as marked from 'marked';
 import * as vscode from 'vscode';
 import { CodeHighlighter } from './codeHighlighter';
 
