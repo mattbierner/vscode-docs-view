@@ -12,6 +12,10 @@
 		"panel"
 	],
 	"enableProposedApi": true,
+	"galleryBanner": {
+		"color": "4C4C4C",
+		"theme": "light"
+	},
 	"engines": {
 		"vscode": "^1.50.0"
 	},
@@ -27,7 +31,7 @@
 		"type": "git",
 		"url": "https://github.com/microsoft/vscode-extension-samples.git"
 	},
-	"main": "./out/extension.js",
+	"main": "./dist/extension",
 	"contributes": {
 		"views": {
 			"explorer": [
@@ -79,9 +83,10 @@
 		"configuration": {
 			"title": "Docs View",
 			"properties": {
-				"documentationView.updateMode": {
+				"docsView.documentationView.updateMode": {
 					"type": "string",
-					"description": "Controls how the documentation view is updated when the cursor moves",
+					"description": "Controls how the documentation view is updated when the cursor moves.",
+					"default": "live",
 					"enum": [
 						"live",
 						"sticky"
@@ -95,10 +100,10 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint . --ext .ts,.tsx",
-		"watch": "tsc -w -p ./"
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
+		"lint": "eslint . --ext .ts,.tsx"
 	},
 	"dependencies": {
 		"marked": "^1.1.1",
@@ -113,6 +118,9 @@
 		"@typescript-eslint/eslint-plugin": "^3.0.2",
 		"@typescript-eslint/parser": "^3.0.2",
 		"eslint": "^7.1.0",
-		"typescript": "^4.0.2"
+		"ts-loader": "^8.0.4",
+		"typescript": "^4.0.2",
+		"webpack": "^4.44.2",
+		"webpack-cli": "^3.3.12"
 	}
 }

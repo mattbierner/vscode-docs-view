@@ -1,0 +1,9 @@
+.vscode
+design
+node_modules
+package-json.lock
+tsconfig.json
+webpack.config.js
+
+*.ts
+*.map
