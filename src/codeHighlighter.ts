@@ -72,22 +72,21 @@ export class CodeHighlighter {
 	}
 
 	private update() {
-		const theme = this.getTheme() ?? 'dark-plus';
+		const theme = this.getShikiTheme() ?? 'dark-plus';
 		this._highlighter = shiki.getHighlighter({ theme });
 	}
 
-	private getTheme() {
-		const currentThemeName = vscode.workspace.getConfiguration('workbench').get<string>('colorTheme');
-
+	private getShikiTheme(): IShikiTheme | undefined {
 		let theme: string | IShikiTheme | undefined;
 
+		const currentThemeName = vscode.workspace.getConfiguration('workbench').get<string>('colorTheme');
 		if (currentThemeName && defaultThemesMap.has(currentThemeName)) {
 			theme = defaultThemesMap.get(currentThemeName);
 		} else if (currentThemeName) {
 			const colorThemePath = getCurrentThemePath(currentThemeName);
 			if (colorThemePath) {
 				theme = shiki.loadTheme(colorThemePath);
-				theme.name = 'random';// Shiki doesn't work without name and defaults to `Nord`
+				theme.name = 'random'; // Shiki doesn't work without name and defaults to `Nord`
 			}
 		}
 
@@ -96,7 +95,7 @@ export class CodeHighlighter {
 		}
 
 		if (theme) {
-			theme.bg = ' '; // Don't set bg so that we use the preview's standard styling
+			theme.bg = ' '; // Don't set bg so that we use the view's background instead
 		}
 		return theme;
 	}
