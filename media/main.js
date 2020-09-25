@@ -6,15 +6,15 @@
 
     const main = document.getElementById('main');
 
-    const startingState = vscode.getState();
+    // const startingState = vscode.getState();
 
-    if (startingState) {
-        if (startingState.body) {
-            updateContent(startingState.body);
-        } else if (startingState.noContent) {
-            setNoContent(startingState.noContent);
-        }
-    }
+    // if (startingState) {
+    //     if (startingState.body) {
+    //         updateContent(startingState.body);
+    //     } else if (startingState.noContent) {
+    //         setNoContent(startingState.noContent);
+    //     }
+    // }
 
     let hasUpdated = false;
 
@@ -44,7 +44,7 @@
      */
     function updateContent(contents) {
         main.innerHTML = contents;
-        vscode.setState({ body: contents });
+        // vscode.setState({ body: contents });
     }
 
     /**
@@ -52,6 +52,6 @@
      */
     function setNoContent(message) {
         main.innerHTML = `<p class="no-content">${message}</p>`;
-        vscode.setState({ noContent: message });
+        // vscode.setState({ noContent: message });
     }
 }());
