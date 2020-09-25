@@ -275,9 +275,14 @@ class DocumentCacheKey {
 }
 
 function cacheKeyEquals(a: CacheKey, b: CacheKey): boolean {
+	if (a === b) {
+		return true;
+	}
+
 	if (a.type !== b.type) {
 		return false;
 	}
+
 	if (a.type === 'none' || b.type === 'none') {
 		return false;
 	}
