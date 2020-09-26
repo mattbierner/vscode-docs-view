@@ -26,7 +26,8 @@ export class Renderer {
 
 	public async render(hovers: readonly vscode.Hover[]): Promise<string> {
 		const parts = (hovers)
-			.flatMap(hover => hover.contents.map(content => this.getMarkdown(content)))
+			.flatMap(hover => hover.contents)
+			.map(content => this.getMarkdown(content))
 			.filter(content => content.length > 0);
 
 		if (!parts.length) {
@@ -39,19 +40,14 @@ export class Renderer {
 		return marked(markdown, { highlight: highlighter });
 	}
 
-
 	private getMarkdown(content: vscode.MarkedString): string {
 		if (typeof content === 'string') {
 			return content;
-		}
-		// eslint-disable-next-line no-extra-boolean-cast
-		else if (!!(content as vscode.MarkdownString).appendCodeblock) { // instanceof not working for some reason?
-			return (content as vscode.MarkdownString).value;
+		} else if (content instanceof vscode.MarkdownString) {
+			return content.value;
 		} else {
-			const languageMarkdown = content as { language: string; value: string };
-
 			const markdown = new vscode.MarkdownString();
-			markdown.appendCodeblock(languageMarkdown.value, languageMarkdown.language);
+			markdown.appendCodeblock(content.value, content.language);
 			return markdown.value;
 		}
 	}
