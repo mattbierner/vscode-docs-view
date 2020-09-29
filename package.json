@@ -29,8 +29,9 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/microsoft/vscode-extension-samples.git"
+		"url": "https://github.com/mattbierner/vscode-docs-view.git"
 	},
+	"bugs": "https://github.com/mattbierner/vscode-docs-view/issues",
 	"main": "./dist/extension",
 	"contributes": {
 		"views": {
