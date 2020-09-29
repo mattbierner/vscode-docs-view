@@ -11,12 +11,11 @@
 		"sidebar",
 		"panel"
 	],
-	"enableProposedApi": true,
 	"galleryBanner": {
 		"color": "4C4C4C",
 		"theme": "dark"
 	},
-	"icon": "./icon.png",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
