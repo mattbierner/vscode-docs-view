@@ -2,9 +2,9 @@
 
 VS Code extension that displays hover documentation in the sidebar or panel.
 
-![The docs view in the sidebar](documentation/example-sidebar.png)
+![The docs view in the sidebar](https://raw.githubusercontent.com/mattbierner/vscode-docs-view/master/documentation/example-sidebar.png)
 
-![The docs view in the panel](documentation/example-panel.png)
+![The docs view in the panel](https://raw.githubusercontent.com/mattbierner/vscode-docs-view/master/documentation/example-panel.png)
 
 ## Features
 
