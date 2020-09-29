@@ -5,5 +5,8 @@ package-json.lock
 tsconfig.json
 webpack.config.js
 
-*.ts
-*.map
+**/*.ts
+**/*.map
+
+# Explicitly include non-bundled node_modules
+!node_modules/shiki

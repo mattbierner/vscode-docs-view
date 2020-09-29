@@ -1,5 +1,5 @@
 import * as shiki from 'shiki';
-import { IShikiTheme, Theme } from 'shiki-themes';
+import type { IShikiTheme, Theme } from 'shiki-themes';
 import { Highlighter } from 'shiki/dist/highlighter';
 import * as vscode from 'vscode';
 
