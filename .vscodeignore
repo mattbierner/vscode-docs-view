@@ -9,4 +9,5 @@ webpack.config.js
 **/*.map
 
 # Explicitly include non-bundled node_modules
-!node_modules/shiki
+!node_modules
+node_modules/marked
