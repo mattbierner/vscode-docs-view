@@ -33,6 +33,10 @@
 	},
 	"bugs": "https://github.com/mattbierner/vscode-docs-view/issues",
 	"main": "./dist/extension",
+	"extensionKind": [
+		"ui",
+		"workspace"
+	],
 	"contributes": {
 		"views": {
 			"explorer": [
