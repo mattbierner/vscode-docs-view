@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.4 - October 16, 2020
+- Enable syntax highlighting for Haskell. Thanks @serras!
+- Add explicit extension kind for remote cases (preferring UI).
+
 ## 0.0.2 - September 29, 2020
 - Fix bundling for publish.
 - Extension metadata fixes.
