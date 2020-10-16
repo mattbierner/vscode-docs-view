@@ -50,13 +50,13 @@
 		"commands": [
 			{
 				"command": "docsView.documentationView.pin",
-				"title": "Pin current docs",
+				"title": "Pin Current Documentation",
 				"icon": "$(pin)",
 				"category": "Docs View"
 			},
 			{
 				"command": "docsView.documentationView.unpin",
-				"title": "Unpin current docs",
+				"title": "Unpin Current Documentation",
 				"icon": "$(pinned)",
 				"category": "Docs View"
 			}
