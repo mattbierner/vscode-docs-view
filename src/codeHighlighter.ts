@@ -3,20 +3,24 @@ import type { IShikiTheme, Theme } from 'shiki-themes';
 import { Highlighter } from 'shiki/dist/highlighter';
 import * as vscode from 'vscode';
 
+declare const TextDecoder: any;
+
 // Default themes use `include` option that shiki doesn't support
 const defaultThemesMap = new Map<string, Theme>([
 	['Default Light+', 'light-plus'],
 	['Default Dark+', 'dark-plus'],
 ]);
 
-function getCurrentThemePath(themeName: string) {
+function getCurrentThemePath(themeName: string): vscode.Uri | undefined {
 	for (const ext of vscode.extensions.all) {
 		const themes = ext.packageJSON.contributes && ext.packageJSON.contributes.themes;
-		if (!themes)
+		if (!themes) {
 			continue;
+		}
+
 		const theme = themes.find((theme: any) => theme.label === themeName || theme.id === themeName);
 		if (theme) {
-			return vscode.Uri.joinPath(ext.extensionUri, theme.path).fsPath;
+			return vscode.Uri.joinPath(ext.extensionUri, theme.path);
 		}
 	}
 }
@@ -34,8 +38,9 @@ export class CodeHighlighter {
 
 		vscode.workspace.onDidChangeConfiguration(e => {
 			if (e.affectsConfiguration('workbench.colorTheme')) {
-				this.update();
-				this._needsRender.fire();
+				this.update().then(() => {
+					this._needsRender.fire();
+				});
 			}
 		}, null, this._disposables);
 
@@ -71,12 +76,12 @@ export class CodeHighlighter {
 		};
 	}
 
-	private update() {
-		const theme = this.getShikiTheme() ?? 'dark-plus';
+	private async update() {
+		const theme = (await CodeHighlighter.getShikiTheme()) ?? 'dark-plus';
 		this._highlighter = shiki.getHighlighter({ theme });
 	}
 
-	private getShikiTheme(): IShikiTheme | undefined {
+	private static async getShikiTheme(): Promise<IShikiTheme | undefined> {
 		let theme: string | IShikiTheme | undefined;
 
 		const currentThemeName = vscode.workspace.getConfiguration('workbench').get<string>('colorTheme');
@@ -85,8 +90,17 @@ export class CodeHighlighter {
 		} else if (currentThemeName) {
 			const colorThemePath = getCurrentThemePath(currentThemeName);
 			if (colorThemePath) {
-				theme = shiki.loadTheme(colorThemePath);
+				theme = shiki.loadTheme(colorThemePath.fsPath);
+
 				theme.name = 'random'; // Shiki doesn't work without name and defaults to `Nord`
+
+				// Add explicit default foreground color rule to match VS Code
+				// https://github.com/shikijs/shiki/issues/45
+				theme.settings.push({
+					settings: {
+						foreground: await getDefaultForeground(colorThemePath),
+					}
+				});
 			}
 		}
 
@@ -108,6 +122,33 @@ function getLanguageId(inId: string): string | undefined {
 		}
 	}
 	return undefined;
+}
+
+const defaultDarkForeground = '#cccccc';
+const defaultLightForeground = '#333333';
+
+async function getDefaultForeground(uri: vscode.Uri): Promise<string> {
+	try {
+		const buffer = await vscode.workspace.fs.readFile(uri);
+		const contents = new TextDecoder("utf-8").decode(buffer);
+		const json = JSON.parse(contents);
+
+		// Prefer using the explicit editor.foreground if it is set
+		const editorForeground = json.colors?.['editor.foreground'];
+		if (editorForeground) {
+			return editorForeground;
+		}
+
+		// Otherwise fallback to some reasonable defaults
+		const isLightTheme = typeof json['type'] === 'string' && json['type'].toLowerCase() === 'light';
+		return isLightTheme
+			? defaultLightForeground
+			: defaultDarkForeground;
+	} catch {
+		return vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light
+			? defaultLightForeground
+			: defaultDarkForeground;
+	}
 }
 
 // Taken from https://github.com/Microsoft/vscode-markdown-tm-grammar/blob/master/build.js
