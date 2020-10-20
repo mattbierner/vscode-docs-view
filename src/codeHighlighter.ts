@@ -58,11 +58,12 @@ export class CodeHighlighter {
 		}
 	}
 
-	public async getHighlighter(): Promise<(code: string, language: string) => string> {
+	public async getHighlighter(document: vscode.TextDocument): Promise<(code: string, language: string) => string> {
 		const highlighter = await this._highlighter;
 
-		return (code: string, language: string): string => {
-			if (highlighter) {
+		return (code: string, inputLanguage: string): string => {
+			const language = inputLanguage || document.languageId;
+			if (language && highlighter) {
 				try {
 					const languageId = getLanguageId(language);
 					if (languageId) {

@@ -24,7 +24,7 @@ export class Renderer {
 		}
 	}
 
-	public async render(hovers: readonly vscode.Hover[]): Promise<string> {
+	public async render(document: vscode.TextDocument, hovers: readonly vscode.Hover[]): Promise<string> {
 		const parts = (hovers)
 			.flatMap(hover => hover.contents)
 			.map(content => this.getMarkdown(content))
@@ -36,7 +36,7 @@ export class Renderer {
 
 		const markdown = parts.join('\n---\n');
 
-		const highlighter = await this._highlighter.getHighlighter();
+		const highlighter = await this._highlighter.getHighlighter(document);
 		return marked(markdown, { highlight: highlighter });
 	}
 

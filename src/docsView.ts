@@ -208,17 +208,18 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 	}
 
 	private async getHtmlContentForActiveEditor(token: vscode.CancellationToken): Promise<string> {
-		if (!vscode.window.activeTextEditor) {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
 			return '';
 		}
 
-		const hovers = await this.getHoversAtCurrentPositionInEditor(vscode.window.activeTextEditor);
+		const hovers = await this.getHoversAtCurrentPositionInEditor(editor);
 
 		if (token.isCancellationRequested) {
 			return '';
 		}
 
-		return hovers?.length ? this._renderer.render(hovers) : '';
+		return hovers?.length ? this._renderer.render(editor.document, hovers) : '';
 	}
 
 	private getHoversAtCurrentPositionInEditor(editor: vscode.TextEditor) {
