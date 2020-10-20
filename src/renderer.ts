@@ -1,4 +1,4 @@
-import * as marked from 'marked';
+import marked from 'marked';
 import * as vscode from 'vscode';
 import { CodeHighlighter } from './codeHighlighter';
 

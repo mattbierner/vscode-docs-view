@@ -1,3 +1,4 @@
+import json5 from 'json5';
 import * as shiki from 'shiki';
 import type { IShikiTheme, Theme } from 'shiki-themes';
 import { Highlighter } from 'shiki/dist/highlighter';
@@ -131,7 +132,7 @@ async function getDefaultForeground(uri: vscode.Uri): Promise<string> {
 	try {
 		const buffer = await vscode.workspace.fs.readFile(uri);
 		const contents = new TextDecoder("utf-8").decode(buffer);
-		const json = JSON.parse(contents);
+		const json = json5.parse(contents);
 
 		// Prefer using the explicit editor.foreground if it is set
 		const editorForeground = json.colors?.['editor.foreground'];
@@ -144,7 +145,7 @@ async function getDefaultForeground(uri: vscode.Uri): Promise<string> {
 		return isLightTheme
 			? defaultLightForeground
 			: defaultDarkForeground;
-	} catch {
+	} catch (e) {
 		return vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light
 			? defaultLightForeground
 			: defaultDarkForeground;
