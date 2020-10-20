@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.6 - October 20, 2020
+- Handle themes that use comments in their source.
+- Treat code blocks as if they are of the source document's language by default.
+
 ## 0.0.5 - October 19, 2020
 - Fix default colors for some dark and light themes.
 
