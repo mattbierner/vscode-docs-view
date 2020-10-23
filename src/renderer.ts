@@ -37,7 +37,10 @@ export class Renderer {
 		const markdown = parts.join('\n---\n');
 
 		const highlighter = await this._highlighter.getHighlighter(document);
-		return marked(markdown, { highlight: highlighter });
+		return marked(markdown, {
+			highlight: highlighter,
+			sanitize: true
+		});
 	}
 
 	private getMarkdown(content: vscode.MarkedString): string {
