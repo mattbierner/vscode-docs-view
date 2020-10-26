@@ -268,9 +268,14 @@ class DocumentCacheKey {
 			return false;
 		}
 
+		if (other.wordRange === this.wordRange) {
+			return true;
+		}
+
 		if (!other.wordRange || !this.wordRange) {
 			return false;
 		}
+
 		return this.wordRange.isEqual(other.wordRange);
 	}
 }
