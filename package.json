@@ -2,7 +2,7 @@
 	"name": "docs-view",
 	"displayName": "Docs View",
 	"description": "Display documentation in the sidebar or panel.",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"publisher": "bierner",
 	"keywords": [
 		"documentation",

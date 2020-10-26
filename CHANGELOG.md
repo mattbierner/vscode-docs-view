@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.7 - October 26, 2020
+- Strip html in doc content. This better matches what VS Code's hovers do.
+- Fix extra calls to the `vscode.executeHoverProvider` command being made if the cursor is not on a word.
+
 ## 0.0.6 - October 20, 2020
 - Handle themes that use comments in their source.
 - Treat code blocks as if they are of the source document's language by default.
