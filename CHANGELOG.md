@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.0.8 - December 15, 2020
+- Improve title if docs view is moved into its own view container. Thanks @Saddiel!
+
 ## 0.0.7 - October 26, 2020
 - Strip html in doc content. This better matches what VS Code's hovers do.
 - Fix extra calls to the `vscode.executeHoverProvider` command being made if the cursor is not on a word.
