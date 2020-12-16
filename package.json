@@ -43,7 +43,8 @@
 				{
 					"type": "webview",
 					"id": "docsView.documentation",
-					"name": "Documentation"
+					"name": "Documentation",
+					"contextualTitle": "Documentation"
 				}
 			]
 		},
