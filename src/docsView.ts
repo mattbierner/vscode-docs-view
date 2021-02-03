@@ -190,7 +190,6 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 				this._view?.webview.postMessage({
 					type: 'noContent',
 					body: 'No documentation found at current cursor position',
-					style: this.getStyleOverrides(),
 					updateMode: this._updateMode,
 				});
 			}
