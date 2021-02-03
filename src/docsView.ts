@@ -234,7 +234,6 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 		const config = vscode.workspace.getConfiguration('docsView');
 		this._updateMode = config.get<UpdateMode>('documentationView.updateMode') || UpdateMode.Live;
 
-		this.update();
 	}
 
 	private getStyleOverrides() {
