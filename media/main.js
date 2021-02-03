@@ -25,6 +25,7 @@
             case 'update':
                 {
                     updateContent(message.body);
+                    updateStyle(message.style);
                     hasUpdated = true;
                     break;
                 }
@@ -54,4 +55,14 @@
         main.innerHTML = `<p class="no-content">${message}</p>`;
         // vscode.setState({ noContent: message });
     }
+
+    /**
+     * @param {string} style
+     */
+    function updateStyle(style) {
+        const body = document.getElementsByTagName('body')[0];
+        body.setAttribute("style", style);
+        // vscode.setState({ body: contents });
+    }
+
 }());

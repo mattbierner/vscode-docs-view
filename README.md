@@ -20,6 +20,8 @@ VS Code extension that displays hover documentation in the sidebar or panel.
     - `live` — (default) The documentation always tracks the current cursor position.
     - `sticky` — The documentation tracks the current cursor position. However if there is no content at the current position, it continues showing the previous documentation.
 
+- `docsView.documentationView.fontSize` - Determines the text size in px in the documentation view.
+
 ## Commands
 
 - `Pin current docs` — Stop live updating of the docs view. Keeps the currently visible docs. 
