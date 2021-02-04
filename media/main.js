@@ -24,14 +24,15 @@
         switch (message.type) {
             case 'update':
                 {
-                    updateContent(message.body);
                     updateStyle(message.style);
+                    updateContent(message.body);
                     hasUpdated = true;
                     break;
                 }
             case 'noContent':
                 {
                     if (!hasUpdated || message.updateMode === 'live') {
+                        updateStyle(message.style);
                         setNoContent(message.body);
                     }
                     hasUpdated = true;
@@ -57,12 +58,13 @@
     }
 
     /**
-     * @param {string} style
+     * @param {object} style
      */
     function updateStyle(style) {
-        const body = document.getElementsByTagName('body')[0];
-        body.setAttribute("style", style);
-        // vscode.setState({ body: contents });
+        const documentStyle = document.documentElement.style;
+        Object.entries(style).map(
+            (tuple) => documentStyle.setProperty(...tuple)
+        )
     }
 
 }());

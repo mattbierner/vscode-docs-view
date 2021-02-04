@@ -133,7 +133,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 				
 				<title>Documentation View</title>
 			</head>
-			<body style = "${this.getStyleOverrides()}">
+			<body>
 				<article id="main"></article>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>
@@ -190,6 +190,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 				this._view?.webview.postMessage({
 					type: 'noContent',
 					body: 'No documentation found at current cursor position',
+					style: this.getStyleOverrides(),
 					updateMode: this._updateMode,
 				});
 			}
@@ -237,10 +238,11 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 	}
 
 	private getStyleOverrides() {
-		const config = vscode.workspace.getConfiguration('docsView');
+		const config = vscode.workspace.getConfiguration('docsView', vscode.window.activeTextEditor?.document);
 		const fontSize = config.get<number>('documentationView.fontSize');
-
-		return(`font-size: ${fontSize}px;`);
+		return({
+			"--docs-view-font-size": `${fontSize}px`
+		});
 	}
 }
 
