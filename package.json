@@ -101,6 +101,11 @@
 						"The documentation view tracks the current cursor position. Display empty content if no documentation is found at the current position.",
 						"The documentation view tries to show the documentation at the current cursor position. If there is none, it continues showing the last available documentation."
 					]
+				},
+				"docsView.documentationView.fontSize": {
+					"type": "integer",
+					"default": 12,
+					"description": "Size of the text in DocsView pane (px)."
 				}
 			}
 		}

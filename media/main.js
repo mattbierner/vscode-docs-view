@@ -24,6 +24,7 @@
         switch (message.type) {
             case 'update':
                 {
+                    updateStyle(message.style);
                     updateContent(message.body);
                     hasUpdated = true;
                     break;
@@ -31,6 +32,7 @@
             case 'noContent':
                 {
                     if (!hasUpdated || message.updateMode === 'live') {
+                        updateStyle(message.style);
                         setNoContent(message.body);
                     }
                     hasUpdated = true;
@@ -54,4 +56,15 @@
         main.innerHTML = `<p class="no-content">${message}</p>`;
         // vscode.setState({ noContent: message });
     }
+
+    /**
+     * @param {object} style
+     */
+    function updateStyle(style) {
+        const documentStyle = document.documentElement.style;
+        Object.entries(style).map(
+            (tuple) => documentStyle.setProperty(...tuple)
+        )
+    }
+
 }());
