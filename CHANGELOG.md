@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.0.9 - February 5, 2021
+- Improve foreground color fallback for themes that don't specify a theme type.
+
 ## 0.0.8 - December 15, 2020
 - Improve title if docs view is moved into its own view container. Thanks @Saddiel!
 
