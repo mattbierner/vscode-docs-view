@@ -135,22 +135,27 @@ async function getDefaultForeground(uri: vscode.Uri): Promise<string> {
 		const contents = new TextDecoder("utf-8").decode(buffer);
 		const json = json5.parse(contents);
 
-		// Prefer using the explicit editor.foreground if it is set
+		// Prefer using the explicit `editor.foreground` if it is set
 		const editorForeground = json.colors?.['editor.foreground'];
 		if (editorForeground) {
 			return editorForeground;
 		}
 
-		// Otherwise fallback to some reasonable defaults
-		const isLightTheme = typeof json['type'] === 'string' && json['type'].toLowerCase() === 'light';
-		return isLightTheme
-			? defaultLightForeground
-			: defaultDarkForeground;
+		// Otherwise try falling back to type specified in theme
+		const themeType = json['type'];
+		if (typeof themeType === 'string') {
+			return themeType.toLowerCase() === 'light'
+				? defaultLightForeground
+				: defaultDarkForeground;
+		}
 	} catch (e) {
-		return vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light
-			? defaultLightForeground
-			: defaultDarkForeground;
+		// noop
 	}
+
+	// Finally fallback to the active theme
+	return vscode.window.activeColorTheme.kind === vscode.ColorThemeKind.Light
+		? defaultLightForeground
+		: defaultDarkForeground;
 }
 
 // Taken from https://github.com/Microsoft/vscode-markdown-tm-grammar/blob/master/build.js
