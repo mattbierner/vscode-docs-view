@@ -215,4 +215,5 @@ const languages = [
 	{ name: 'handlebars', language: 'handlebars', identifiers: ['handlebars', 'hbs'], source: 'text.html.handlebars' },
 	{ name: 'markdown', language: 'markdown', identifiers: ['markdown', 'md'], source: 'text.html.markdown' },
 	{ name: 'haskell', language: 'haskell', identifiers: ['hs', 'lhs'], source: 'text.html.hs' },
+	{ name: 'ocaml', language: 'ocaml', identifiers: ['ml', 'mli', 'eliom', 'eliomi'], source: 'source.ocaml.interface' },
 ];
