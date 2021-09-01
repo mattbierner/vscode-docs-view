@@ -1,3 +1,4 @@
+//@ts-check
 /**@type {import('eslint').Linter.Config} */
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -10,11 +11,7 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 	],
-	overrides: [
-		{
-			"excludedFiles": "*.js"
-		}
-	],
+	ignorePatterns: ['**/*.js'],
 	rules: {
 		'semi': [2, "always"],
 		'@typescript-eslint/no-unused-vars': 0,
