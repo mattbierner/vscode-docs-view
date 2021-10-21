@@ -15,17 +15,16 @@ const config = {
 
     entry: './src/extension.ts',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '..', 'dist'),
         filename: 'extension.js',
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },
     devtool: 'source-map',
     externals: {
-        vscode: "commonjs vscode",
-        shiki: "commonjs shiki"
+        vscode: "commonjs vscode"
     },
-    resolve: { 
+    resolve: {
         extensions: ['.ts', '.js']
     },
     module: {

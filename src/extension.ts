@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
+import { CodeHighlighter } from './codeHighlighter';
 import { DocsViewViewProvider } from './docsView';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext, highlighter?: CodeHighlighter) {
 
-	const provider = new DocsViewViewProvider(context.extensionUri);
+	const provider = new DocsViewViewProvider(context.extensionUri, highlighter ?? new CodeHighlighter(context.extensionUri));
 	context.subscriptions.push(provider);
 
 	context.subscriptions.push(

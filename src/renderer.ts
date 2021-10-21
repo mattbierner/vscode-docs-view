@@ -10,8 +10,10 @@ export class Renderer {
 
 	public readonly needsRender: vscode.Event<void>;
 
-	constructor() {
-		this._highlighter = new CodeHighlighter();
+	constructor(
+		highlighter: CodeHighlighter
+	) {
+		this._highlighter = highlighter;
 		this._disposables.push(this._highlighter);
 
 		this.needsRender = this._highlighter.needsRender;

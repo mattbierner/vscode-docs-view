@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { CodeHighlighter } from './codeHighlighter';
 import { Renderer } from './renderer';
 
 enum UpdateMode {
@@ -14,7 +15,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 	private readonly _disposables: vscode.Disposable[] = [];
 
-	private readonly _renderer = new Renderer();
+	private readonly _renderer: Renderer;
 
 	private _view?: vscode.WebviewView;
 	private _currentCacheKey: CacheKey = cacheKeyNone;
@@ -25,7 +26,10 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 	constructor(
 		private readonly _extensionUri: vscode.Uri,
+		highlighter: CodeHighlighter
 	) {
+		this._renderer = new Renderer(highlighter);
+
 		vscode.window.onDidChangeActiveTextEditor(() => {
 			this.update();
 		}, null, this._disposables);
@@ -132,6 +136,11 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 				<link href="${styleUri}" rel="stylesheet">
 				
 				<title>Documentation View</title>
+				<style>
+					pre.shiki {
+						background-color: transparent !important;
+					}
+				</style>
 			</head>
 			<body>
 				<article id="main"></article>

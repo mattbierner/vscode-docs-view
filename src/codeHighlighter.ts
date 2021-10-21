@@ -1,7 +1,6 @@
 import json5 from 'json5';
 import * as shiki from 'shiki';
 import type { IShikiTheme, Theme } from 'shiki-themes';
-import { Highlighter } from 'shiki/dist/highlighter';
 import * as vscode from 'vscode';
 
 declare const TextDecoder: any;
@@ -30,9 +29,11 @@ export class CodeHighlighter {
 
 	private readonly _disposables: vscode.Disposable[] = [];
 
-	private _highlighter?: Promise<Highlighter>;
+	protected _highlighter?: Promise<shiki.Highlighter>;
 
-	constructor() {
+	constructor(
+		private readonly _extensionUri: vscode.Uri
+	) {
 		this._needsRender = new vscode.EventEmitter<void>();
 		this._disposables.push(this._needsRender);
 		this.needsRender = this._needsRender.event;
@@ -78,21 +79,30 @@ export class CodeHighlighter {
 		};
 	}
 
-	private async update() {
-		const theme = (await CodeHighlighter.getShikiTheme()) ?? 'dark-plus';
-		this._highlighter = shiki.getHighlighter({ theme });
+	protected async update() {
+		shiki.setOnigasmWASM(vscode.Uri.joinPath(this._extensionUri, 'node_modules', 'shiki', 'dist', 'onigasm.wasm').fsPath);
+		const theme: any = (await CodeHighlighter.getShikiTheme()) ?? 'dark-plus';
+		this._highlighter = shiki.getHighlighter({
+			theme,
+			paths: {
+				languages: vscode.Uri.joinPath(this._extensionUri, 'node_modules', 'shiki', 'languages').fsPath + '/',
+				themes: vscode.Uri.joinPath(this._extensionUri, 'node_modules', 'shiki', 'themes').fsPath + '/',
+			}
+		});
 	}
 
-	private static async getShikiTheme(): Promise<IShikiTheme | undefined> {
+	private static async getShikiTheme(): Promise<IShikiTheme | string | undefined> {
 		let theme: string | IShikiTheme | undefined;
 
 		const currentThemeName = vscode.workspace.getConfiguration('workbench').get<string>('colorTheme');
 		if (currentThemeName && defaultThemesMap.has(currentThemeName)) {
-			theme = defaultThemesMap.get(currentThemeName);
-		} else if (currentThemeName) {
+			return defaultThemesMap.get(currentThemeName)!;
+		}
+
+		if (currentThemeName) {
 			const colorThemePath = getCurrentThemePath(currentThemeName);
 			if (colorThemePath) {
-				theme = shiki.loadTheme(colorThemePath.fsPath);
+				theme = await shiki.loadTheme(colorThemePath.fsPath);
 
 				theme.name = 'random'; // Shiki doesn't work without name and defaults to `Nord`
 
@@ -107,7 +117,7 @@ export class CodeHighlighter {
 		}
 
 		if (typeof theme === 'string') {
-			theme = shiki.getTheme(theme as any);
+			return theme;
 		}
 
 		if (theme) {
