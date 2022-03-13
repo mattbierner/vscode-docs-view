@@ -20,6 +20,8 @@ VS Code extension that displays hover documentation in the sidebar or panel.
     - `live` — (default) The documentation always tracks the current cursor position.
     - `sticky` — The documentation tracks the current cursor position. However if there is no content at the current position, it continues showing the previous documentation.
 
+- `docsView.display.pinMarkerColor` — Controls the color of the marker used by the pin. Possible values are any value the css color property can take. If blank or invalid the marker wont be displayed.
+
 ## Commands
 
 - `Pin current docs` — Stop live updating of the docs view. Keeps the currently visible docs. 

@@ -101,6 +101,11 @@
 						"The documentation view tracks the current cursor position. Display empty content if no documentation is found at the current position.",
 						"The documentation view tries to show the documentation at the current cursor position. If there is none, it continues showing the last available documentation."
 					]
+				},
+				"docsView.display.pinMarkerColor": {
+					"type": "string",
+					"description": "Controls the color of the marker used by the pin. Possible values are any value the css color property can take. If blank or invalid the marker wont be displayed.",
+					"default": "lime"
 				}
 			}
 		}
