@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.0.10 - April 3, 2021
+- Fix highlighting of php blocks. Thanks @ctf0!
+
 ## 0.0.9 - February 5, 2021
 - Improve foreground color fallback for themes that don't specify a theme type.
 
