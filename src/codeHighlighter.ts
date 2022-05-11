@@ -172,7 +172,7 @@ const languages = [
 	// 	Left to its own devices, the PHP grammar will match HTML as a combination of operators
 	// and constants. Therefore, HTML must take precedence over PHP in order to get proper
 	// syntax highlighting.
-	{ name: 'php', language: 'php', identifiers: ['php', 'php3', 'php4', 'php5', 'phpt', 'phtml', 'aw', 'ctp'], source: ['text.html.basic', 'source.php'] },
+	{ name: 'php', language: 'php', identifiers: ['php', 'php3', 'php4', 'php5', 'phpt', 'phtml', 'aw', 'ctp'], source: ['text.html.basic', 'text.html.php', 'source.php'] },
 	{ name: 'sql', language: 'sql', identifiers: ['sql', 'ddl', 'dml'], source: 'source.sql' },
 	{ name: 'vs_net', language: 'vs_net', identifiers: ['vb'], source: 'source.asp.vb.net' },
 	{ name: 'xml', language: 'xml', identifiers: ['xml', 'xsd', 'tld', 'jsp', 'pt', 'cpt', 'dtml', 'rss', 'opml'], source: 'text.xml' },
@@ -215,5 +215,7 @@ const languages = [
 	{ name: 'handlebars', language: 'handlebars', identifiers: ['handlebars', 'hbs'], source: 'text.html.handlebars' },
 	{ name: 'markdown', language: 'markdown', identifiers: ['markdown', 'md'], source: 'text.html.markdown' },
 	{ name: 'haskell', language: 'haskell', identifiers: ['hs', 'lhs'], source: 'text.html.hs' },
-	{ name: 'ocaml', language: 'ocaml', identifiers: ['ml', 'mli', 'eliom', 'eliomi'], source: 'source.ocaml.interface' },
+	{ name: 'ocaml', language: 'ocaml', identifiers: ['ml', 'mli', 'eliom', 'eliomi'], source: 'source.ocaml.interface' },	
+	{ name: 'zig', language: 'zig', identifiers: ['zig'], source: 'source.zig' },
+	{ name: 'd', language: 'd', identifiers: ['d'], source: 'source.d' },
 ];
