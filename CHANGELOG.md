@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.11 - May 11, 2022
+- Add support for D and Zig. Thanks @ryuukk!
+- Add support for OCaml. Thanks @Khady!
+- Pick up latest `marked` version.
+
 ## 0.0.10 - April 3, 2021
 - Fix highlighting of php blocks. Thanks @ctf0!
 
