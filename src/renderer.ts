@@ -43,6 +43,30 @@ export class Renderer {
 		});
 	}
 
+	public async renderSignature(document: vscode.TextDocument, signatureHelp: vscode.SignatureHelp): Promise<string> {
+
+		if (signatureHelp.signatures.length === 0) {
+			return '';
+		}
+
+		const parts: string[] = [];
+		parts.push('Signature Info');
+		signatureHelp.signatures.forEach((signatureInformation: vscode.SignatureInformation, index: number) => {
+			parts.push(`\n---\n${signatureHelp.activeSignature === index ? '🟩': '⬛'}\`${signatureInformation.label}\``);
+			if (signatureInformation.documentation) {
+				parts.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
+			}
+		});
+
+		const markdown = parts.join('\n---\n');
+
+		const highlighter = await this._highlighter.getHighlighter(document);
+		return marked(markdown, {
+			highlight: highlighter,
+			sanitize: true
+		});
+	}
+
 	private getMarkdown(content: vscode.MarkedString): string {
 		if (typeof content === 'string') {
 			return content;

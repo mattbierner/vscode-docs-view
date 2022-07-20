@@ -45,6 +45,12 @@
 					"id": "docsView.documentation",
 					"name": "Documentation",
 					"contextualTitle": "Documentation"
+				},
+				{
+					"type": "webview",
+					"id": "docsView.signatureinfo",
+					"name": "Signature Info",
+					"contextualTitle": "Signature Info"
 				}
 			]
 		},
@@ -100,6 +106,19 @@
 					"enumDescriptions": [
 						"The documentation view tracks the current cursor position. Display empty content if no documentation is found at the current position.",
 						"The documentation view tries to show the documentation at the current cursor position. If there is none, it continues showing the last available documentation."
+					]
+				},
+				"docsView.signatureInfoView.updateMode": {
+					"type": "string",
+					"description": "Controls how the signature info view is updated when the cursor moves.",
+					"default": "live",
+					"enum": [
+						"live",
+						"sticky"
+					],
+					"enumDescriptions": [
+						"The signature info tracks the current cursor position. Display empty content if no signature info is found at the current position.",
+						"The signature info tries to show the signature info at the current cursor position. If there is none, it continues showing the last available signature info."
 					]
 				}
 			}
