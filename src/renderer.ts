@@ -60,7 +60,7 @@ export class Renderer {
 				pushTo = parts;
 			}
 			pushTo.push(this.getMarkdown(
-				`${String(index + 1).padStart(2, '0')}/${String(signatureHelp.signatures.length + 1).padStart(2, '0')} ${signatureHelp.activeSignature === index ? '🟩' : '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
+				`${String(index + 1).padStart(2, '0')}/${String(signatureHelp.signatures.length).padStart(2, '0')} ${signatureHelp.activeSignature === index ? '🟩' : '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
 			if (signatureInformation.documentation) {
 				pushTo.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
 			}
