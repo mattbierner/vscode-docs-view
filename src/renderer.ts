@@ -49,16 +49,17 @@ export class Renderer {
 			return '';
 		}
 
-		const parts: string[] = [];
-		parts.push('Signature Info');
+		const parts: any[] = [];
 		signatureHelp.signatures.forEach((signatureInformation: vscode.SignatureInformation, index: number) => {
-			parts.push(`\n---\n${signatureHelp.activeSignature === index ? '🟩': '⬛'}\`${signatureInformation.label}\``);
+			parts.push(this.getMarkdown(`${index + 1}. ${signatureHelp.activeSignature === index ? '🟩': '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
 			if (signatureInformation.documentation) {
 				parts.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
 			}
 		});
 
-		const markdown = parts.join('\n---\n');
+		parts.unshift('')
+
+		const markdown = parts.join('\n___\n');
 
 		const highlighter = await this._highlighter.getHighlighter(document);
 		return marked(markdown, {
