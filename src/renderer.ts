@@ -49,15 +49,23 @@ export class Renderer {
 			return '';
 		}
 
-		const parts: any[] = [];
+		let parts: any[] = [];
+		const activeSignature: any[] = [];
+
 		signatureHelp.signatures.forEach((signatureInformation: vscode.SignatureInformation, index: number) => {
-			parts.push(this.getMarkdown(`${index + 1}. ${signatureHelp.activeSignature === index ? '🟩': '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
+			let pushTo;
+			if (signatureHelp.activeSignature === index) {
+				pushTo = activeSignature;
+			} else {
+				pushTo = parts;
+			}
+			pushTo.push(this.getMarkdown(
+				`${String(index + 1).padStart(2, '0')}/${String(signatureHelp.signatures.length + 1).padStart(2, '0')} ${signatureHelp.activeSignature === index ? '🟩' : '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
 			if (signatureInformation.documentation) {
-				parts.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
+				pushTo.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
 			}
 		});
-
-		parts.unshift('')
+		parts = ['', ...activeSignature, ...parts];
 
 		const markdown = parts.join('\n___\n');
 
