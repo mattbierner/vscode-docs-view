@@ -1,12 +1,9 @@
 import * as vscode from 'vscode';
 import { Renderer } from './renderer';
 
-enum UpdateMode {
-	Live = 'live',
-	Sticky = 'sticky',
-}
+import { BaseViewViewProvider, CacheKey, cacheKeyEquals, cacheKeyNone, createCacheKey, getNonce, UpdateMode } from './baseView';
 
-export class SignatureInfoViewViewProvider implements vscode.WebviewViewProvider {
+export class SignatureInfoViewViewProvider extends BaseViewViewProvider implements vscode.WebviewViewProvider {
 
 	public static readonly viewType = 'docsView.signatureinfo';
 
@@ -26,6 +23,7 @@ export class SignatureInfoViewViewProvider implements vscode.WebviewViewProvider
 	constructor(
 		private readonly _extensionUri: vscode.Uri,
 	) {
+		super();
 		vscode.window.onDidChangeActiveTextEditor(() => {
 			this.update();
 		}, null, this._disposables);
@@ -239,74 +237,5 @@ export class SignatureInfoViewViewProvider implements vscode.WebviewViewProvider
 	}
 }
 
-function getNonce() {
-	let text = '';
-	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	for (let i = 0; i < 32; i++) {
-		text += possible.charAt(Math.floor(Math.random() * possible.length));
-	}
-	return text;
-}
 
 
-type CacheKey = typeof cacheKeyNone | DocumentCacheKey;
-
-
-const cacheKeyNone = { type: 'none' } as const;
-
-class DocumentCacheKey {
-	readonly type = 'document';
-
-	constructor(
-		public readonly url: vscode.Uri,
-		public readonly version: number,
-		public readonly wordRange: vscode.Range | undefined,
-	) { }
-
-	public equals(other: DocumentCacheKey): boolean {
-		if (this.url.toString() !== other.url.toString()) {
-			return false;
-		}
-
-		if (this.version !== other.version) {
-			return false;
-		}
-
-		if (other.wordRange === this.wordRange) {
-			return true;
-		}
-
-		if (!other.wordRange || !this.wordRange) {
-			return false;
-		}
-
-		return this.wordRange.isEqual(other.wordRange);
-	}
-}
-
-function cacheKeyEquals(a: CacheKey, b: CacheKey): boolean {
-	if (a === b) {
-		return true;
-	}
-
-	if (a.type !== b.type) {
-		return false;
-	}
-
-	if (a.type === 'none' || b.type === 'none') {
-		return false;
-	}
-
-	return a.equals(b);
-}
-
-function createCacheKey(editor: vscode.TextEditor | undefined): CacheKey {
-	if (!editor) {
-		return cacheKeyNone;
-	}
-
-	return new DocumentCacheKey(
-		editor.document.uri,
-		editor.document.version,
-		editor.document.getWordRangeAtPosition(editor.selection.active));
-}

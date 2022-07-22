@@ -62,15 +62,13 @@ export class Renderer {
 			pushTo.push(`\n___\n\`\`\`${signatureInformation.label}\`\`\``);
 			if (signatureInformation.documentation) {
 				let signature: string;
-				pushTo.push('\n___\n');
 				if (typeof signatureInformation.documentation === 'string') {
 					signature = signatureInformation.documentation;
 				} else {
 					signature = (signatureInformation.documentation as vscode.MarkdownString).value;
 				}
 
-				pushTo.push(signature);
-				pushTo.push('\n___\n');
+				pushTo.push(`\n\n${signature}`);
 			}
 		});
 		parts = [...activeSignature, ...parts];
