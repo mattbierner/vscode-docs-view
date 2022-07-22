@@ -59,15 +59,23 @@ export class Renderer {
 			} else {
 				pushTo = parts;
 			}
-			pushTo.push(this.getMarkdown(
-				`${String(index + 1).padStart(2, '0')}/${String(signatureHelp.signatures.length).padStart(2, '0')} ${signatureHelp.activeSignature === index ? '🟩' : '⬛'} \`\`\`${signatureInformation.label}\`\`\``));
+			pushTo.push(`\n___\n\`\`\`${signatureInformation.label}\`\`\``);
 			if (signatureInformation.documentation) {
-				pushTo.push(this.getMarkdown(signatureInformation.documentation as vscode.MarkdownString));
+				let signature: string;
+				pushTo.push('\n___\n');
+				if (typeof signatureInformation.documentation === 'string') {
+					signature = signatureInformation.documentation;
+				} else {
+					signature = (signatureInformation.documentation as vscode.MarkdownString).value;
+				}
+
+				pushTo.push(signature);
+				pushTo.push('\n___\n');
 			}
 		});
-		parts = ['', ...activeSignature, ...parts];
+		parts = [...activeSignature, ...parts];
 
-		const markdown = parts.join('\n___\n');
+		const markdown = parts.join('');
 
 		const highlighter = await this._highlighter.getHighlighter(document);
 		return marked(markdown, {

@@ -25,7 +25,10 @@
 	"activationEvents": [
 		"onView:docsView.documentation",
 		"onCommand:docsView.documentationView.pin",
-		"onCommand:docsView.documentationView.unpin"
+		"onCommand:docsView.documentationView.unpin",
+		"onView:docsView.signatureinfo",
+		"onCommand:docsView.signatureInfoView.pin",
+		"onCommand:docsView.signatureInfoView.unpin"
 	],
 	"repository": {
 		"type": "git",
@@ -50,7 +53,8 @@
 					"type": "webview",
 					"id": "docsView.signatureinfo",
 					"name": "Signature Info",
-					"contextualTitle": "Signature Info"
+					"contextualTitle": "Signature Info",
+					"visibility": "collapsed"
 				}
 			]
 		},
@@ -66,6 +70,18 @@
 				"title": "Unpin Current Documentation",
 				"icon": "$(pinned)",
 				"category": "Docs View"
+			},
+			{
+				"command": "docsView.signatureInfoView.pin",
+				"title": "Pin Current Signature Info",
+				"icon": "$(pin)",
+				"category": "Signature Info View"
+			},
+			{
+				"command": "docsView.signatureInfoView.unpin",
+				"title": "Unpin Current Signature Info",
+				"icon": "$(pinned)",
+				"category": "Signature Info View"
 			}
 		],
 		"menus": {
@@ -77,6 +93,14 @@
 				{
 					"command": "docsView.documentationView.unpin",
 					"when": "docsView.documentationView.isPinned"
+				},
+				{
+					"command": "docsView.signatureInfoView.pin",
+					"when": "!docsView.signatureInfoView.isPinned"
+				},
+				{
+					"command": "docsView.signatureInfoView.unpin",
+					"when": "docsView.signatureInfoView.isPinned"
 				}
 			],
 			"view/title": [
@@ -88,6 +112,16 @@
 				{
 					"command": "docsView.documentationView.unpin",
 					"when": "view == docsView.documentation && docsView.documentationView.isPinned",
+					"group": "navigation"
+				},
+				{
+					"command": "docsView.signatureInfoView.pin",
+					"when": "view == docsView.signatureinfo && !docsView.signatureInfoView.isPinned",
+					"group": "navigation"
+				},
+				{
+					"command": "docsView.signatureInfoView.unpin",
+					"when": "view == docsView.signatureinfo && docsView.signatureInfoView.isPinned",
 					"group": "navigation"
 				}
 			]

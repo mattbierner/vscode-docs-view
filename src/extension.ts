@@ -25,4 +25,14 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('docsView.documentationView.unpin', () => {
 			provider.unpin();
 		}));
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('docsView.signatureInfoView.pin', () => {
+			signatureInfoViewViewProvider.pin();
+		}));
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('docsView.signatureInfoView.unpin', () => {
+			signatureInfoViewViewProvider.unpin();
+		}));
 }
