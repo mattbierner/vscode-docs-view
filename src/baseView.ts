@@ -1,14 +1,62 @@
 import * as vscode from 'vscode';
 
+import { Renderer } from './renderer';
+
 export enum UpdateMode {
 	Live = 'live',
 	Sticky = 'sticky',
 }
 
 export class BaseViewViewProvider implements vscode.WebviewViewProvider {
+	protected readonly _disposables: vscode.Disposable[] = [];
+
+	protected readonly _renderer = new Renderer();
+
+	protected _view?: vscode.WebviewView;
+	protected _currentCacheKey: CacheKey = cacheKeyNone;
+	protected _loading?: { cts: vscode.CancellationTokenSource }
+
+	protected _pinned = false;
+	protected _updateMode = UpdateMode.Live;
+
 	resolveWebviewView(_webviewView: vscode.WebviewView, _context: vscode.WebviewViewResolveContext<unknown>, _token: vscode.CancellationToken): void | Thenable<void> {
 		throw new Error('Method not implemented.');
 	}
+
+	protected get pinnedContext(): string {
+		throw new Error('Method not implemented.');
+	}
+
+	public pin() {
+		this.updatePinned(true);
+	}
+
+	public unpin() {
+		this.updatePinned(false);
+	}
+
+	private updatePinned(value: boolean) {
+		if (this._pinned === value) {
+			return;
+		}
+
+		this._pinned = value;
+		vscode.commands.executeCommand('setContext', this.pinnedContext, value);
+
+		this.update();
+	}
+
+	public updateTitle() {
+		if (!this._view) {
+			return;
+		}
+		this._view.description = this._pinned ? "(pinned)" : undefined;
+	}
+
+	protected async update(_ignoreCache = false) {
+		throw new Error('Method not implemented.');
+	}
+
 }
 
 export function getNonce() {

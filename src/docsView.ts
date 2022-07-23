@@ -1,24 +1,12 @@
 import * as vscode from 'vscode';
-import { Renderer } from './renderer';
 
-import { BaseViewViewProvider, CacheKey, cacheKeyEquals, cacheKeyNone, createCacheKey, getNonce, UpdateMode } from './baseView';
+import { BaseViewViewProvider, cacheKeyEquals, createCacheKey, getNonce, UpdateMode } from './baseView';
 
 export class DocsViewViewProvider extends BaseViewViewProvider implements vscode.WebviewViewProvider {
 
 	public static readonly viewType = 'docsView.documentation';
 
-	private static readonly pinnedContext = 'docsView.documentationView.isPinned';
-
-	private readonly _disposables: vscode.Disposable[] = [];
-
-	private readonly _renderer = new Renderer();
-
-	private _view?: vscode.WebviewView;
-	private _currentCacheKey: CacheKey = cacheKeyNone;
-	private _loading?: { cts: vscode.CancellationTokenSource }
-
-	private _updateMode = UpdateMode.Live;
-	private _pinned = false;
+	private readonly _pinnedContext = 'docsView.documentationView.isPinned';
 
 	constructor(
 		private readonly _extensionUri: vscode.Uri,
@@ -42,6 +30,10 @@ export class DocsViewViewProvider extends BaseViewViewProvider implements vscode
 
 		this.updateConfiguration();
 		this.update();
+	}
+
+	protected get pinnedContext(): string {
+		return this._pinnedContext;
 	}
 
 	dispose() {
@@ -81,32 +73,6 @@ export class DocsViewViewProvider extends BaseViewViewProvider implements vscode
 		this.update(/* force */ true);
 	}
 
-	public pin() {
-		this.updatePinned(true);
-	}
-
-	public unpin() {
-		this.updatePinned(false);
-	}
-
-	private updatePinned(value: boolean) {
-		if (this._pinned === value) {
-			return;
-		}
-
-		this._pinned = value;
-		vscode.commands.executeCommand('setContext', DocsViewViewProvider.pinnedContext, value);
-
-		this.update();
-	}
-
-	private updateTitle() {
-		if (!this._view) {
-			return;
-		}
-		this._view.description = this._pinned ? "(pinned)" : undefined;
-	}
-
 	private _getHtmlForWebview(webview: vscode.Webview) {
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
 		const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
@@ -139,7 +105,7 @@ export class DocsViewViewProvider extends BaseViewViewProvider implements vscode
 			</html>`;
 	}
 
-	private async update(ignoreCache = false) {
+	protected async update(ignoreCache = false) {
 		if (!this._view) {
 			return;
 		}

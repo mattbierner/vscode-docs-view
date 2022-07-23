@@ -1,24 +1,12 @@
 import * as vscode from 'vscode';
-import { Renderer } from './renderer';
 
-import { BaseViewViewProvider, CacheKey, cacheKeyEquals, cacheKeyNone, createCacheKey, getNonce, UpdateMode } from './baseView';
+import { BaseViewViewProvider, cacheKeyEquals, createCacheKey, getNonce, UpdateMode } from './baseView';
 
 export class SignatureInfoViewViewProvider extends BaseViewViewProvider implements vscode.WebviewViewProvider {
 
 	public static readonly viewType = 'docsView.signatureinfo';
 
-	private static readonly pinnedContext = 'docsView.signatureInfoView.isPinned';
-
-	private readonly _disposables: vscode.Disposable[] = [];
-
-	private readonly _renderer = new Renderer();
-
-	private _view?: vscode.WebviewView;
-	private _currentCacheKey: CacheKey = cacheKeyNone;
-	private _loading?: { cts: vscode.CancellationTokenSource }
-
-	private _updateMode = UpdateMode.Live;
-	private _pinned = false;
+	protected readonly _pinnedContext = 'docsView.signatureInfoView.isPinned';
 
 	constructor(
 		private readonly _extensionUri: vscode.Uri,
@@ -42,6 +30,10 @@ export class SignatureInfoViewViewProvider extends BaseViewViewProvider implemen
 
 		this.updateConfiguration();
 		this.update();
+	}
+
+	protected get pinnedContext(): string {
+		return this._pinnedContext;
 	}
 
 	dispose() {
@@ -81,32 +73,6 @@ export class SignatureInfoViewViewProvider extends BaseViewViewProvider implemen
 		this.update(/* force */ true);
 	}
 
-	public pin() {
-		this.updatePinned(true);
-	}
-
-	public unpin() {
-		this.updatePinned(false);
-	}
-
-	private updatePinned(value: boolean) {
-		if (this._pinned === value) {
-			return;
-		}
-
-		this._pinned = value;
-		vscode.commands.executeCommand('setContext', SignatureInfoViewViewProvider.pinnedContext, value);
-
-		this.update();
-	}
-
-	private updateTitle() {
-		if (!this._view) {
-			return;
-		}
-		this._view.description = this._pinned ? "(pinned)" : undefined;
-	}
-
 	private _getHtmlForWebview(webview: vscode.Webview) {
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js'));
 		const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
@@ -139,7 +105,7 @@ export class SignatureInfoViewViewProvider extends BaseViewViewProvider implemen
 			</html>`;
 	}
 
-	private async update(ignoreCache = false) {
+	protected async update(ignoreCache = false) {
 		if (!this._view) {
 			return;
 		}
@@ -186,7 +152,7 @@ export class SignatureInfoViewViewProvider extends BaseViewViewProvider implemen
 			} else {
 				this._view?.webview.postMessage({
 					type: 'noContent',
-					body: 'No documentation found at current cursor position',
+					body: 'No signature found at current cursor position',
 					updateMode: this._updateMode,
 				});
 			}
