@@ -107,11 +107,13 @@ export class CodeHighlighter {
 		}
 
 		if (typeof theme === 'string') {
-			theme = await shiki.loadTheme(theme as any)
+			// @ts-ignore
+			theme = shiki.getTheme(theme) as IShikiTheme
 		}
 
-		if (theme) {
+		if (theme && theme.colors) {
 			theme.bg = ' '; // Don't set bg so that we use the view's background instead
+			theme.colors['editor.background'] = ' ';
 		}
 		return theme;
 	}
