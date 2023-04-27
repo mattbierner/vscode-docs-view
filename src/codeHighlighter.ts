@@ -111,9 +111,14 @@ export class CodeHighlighter {
 			theme = shiki.getTheme(theme) as IShikiTheme
 		}
 
-		if (theme && theme.colors) {
-			theme.bg = ' '; // Don't set bg so that we use the view's background instead
-			theme.colors['editor.background'] = ' ';
+		if (theme && theme.settings) {
+			// Don't set bg so that we use the view's background instead
+			theme.bg = 'transparent'
+			theme.settings.unshift({
+				settings: {
+					background: 'transparent',
+				}
+			})
 		}
 		return theme;
 	}
