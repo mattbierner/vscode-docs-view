@@ -1,7 +1,7 @@
 import json5 from 'json5';
 import * as shiki from 'shiki';
-import type { IShikiTheme, Theme } from 'shiki-themes';
-import { Highlighter } from 'shiki/dist/highlighter';
+import type { IShikiTheme, Theme } from 'shiki';
+import { Highlighter } from 'shiki';
 import * as vscode from 'vscode';
 
 declare const TextDecoder: any;
@@ -92,7 +92,7 @@ export class CodeHighlighter {
 		} else if (currentThemeName) {
 			const colorThemePath = getCurrentThemePath(currentThemeName);
 			if (colorThemePath) {
-				theme = shiki.loadTheme(colorThemePath.fsPath);
+				theme = await shiki.loadTheme(colorThemePath.fsPath);
 
 				theme.name = 'random'; // Shiki doesn't work without name and defaults to `Nord`
 
@@ -107,7 +107,7 @@ export class CodeHighlighter {
 		}
 
 		if (typeof theme === 'string') {
-			theme = shiki.getTheme(theme as any);
+			theme = await shiki.loadTheme(theme as any);
 		}
 
 		if (theme) {
