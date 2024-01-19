@@ -43,7 +43,7 @@ export class Renderer {
 		});
 	}
 
-	private getMarkdown(content: vscode.MarkedString): string {
+	private getMarkdown(content: vscode.MarkedString | vscode.MarkdownString): string {
 		if (typeof content === 'string') {
 			return content;
 		} else if (content instanceof vscode.MarkdownString) {
