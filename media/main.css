@@ -6,12 +6,16 @@ body {
 	font-size: 12px;
 	line-height: 17px;
 }
+pre.shiki {
+	background: none !important;
+}
 
 pre code {
 	word-wrap: break-word;
 	white-space: pre-wrap;
 	word-break: normal;
-	background: none;
+	background: none !important;
+	padding: 0;
 }
 
 #main > * {

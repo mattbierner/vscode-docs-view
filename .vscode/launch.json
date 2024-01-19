@@ -11,8 +11,8 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"outFiles": ["${workspaceFolder}/out/**/*.js"],
-			"preLaunchTask": "npm: webpack"
+			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
+			// "preLaunchTask": "npm: webpack"
 		}
 	]
 }
