@@ -18,7 +18,7 @@ export class DocsViewViewProvider implements vscode.WebviewViewProvider {
 
 	private _view?: vscode.WebviewView;
 	private _currentCacheKey: CacheKey = cacheKeyNone;
-	private _loading?: { cts: vscode.CancellationTokenSource }
+	private _loading?: { cts: vscode.CancellationTokenSource };
 
 	private _updateMode = UpdateMode.Live;
 	private _pinned = false;

@@ -45,7 +45,7 @@ export class Renderer {
 			renderer: {
 				code: (code: string, infostring: string | undefined, _escaped: boolean) => highlight(code, infostring ?? '')
 			}
-		})
+		});
 
 		const renderedMarkdown = await marked.parse(markdown, {});
 		return this._purify.sanitize(renderedMarkdown, { USE_PROFILES: { html: true } });
