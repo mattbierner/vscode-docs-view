@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.0 - January 19, 2024
+- Update Shiki versions. Thanks @bricker!
+- Run dompurify over rendered content.
+
 ## 0.0.11 - May 11, 2022
 - Add support for D and Zig. Thanks @ryuukk!
 - Add support for OCaml. Thanks @Khady!
